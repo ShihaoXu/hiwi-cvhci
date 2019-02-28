@@ -235,7 +235,9 @@ while cap.isOpened():
                 # draw ignored
                 else:
                     print('draw ignored')
-                    cv2.rectangle(frame_annotated, (xmin, ymin), (xmax, ymax), (0, 0, 0), -1)
+                    cv2.rectangle(frame_annotated, 
+                                  (item['box'][0], item['box'][1]),
+                                  (item['box'][2], item['box'][3]),, (0, 0, 0), -1)
             cv2.imshow('Frame', frame_annotated)
 
             # Wait for user response
@@ -290,31 +292,12 @@ while cap.isOpened():
                     else:
                         root.appendChild(prepareObj(item))
 
-                # sanity check: display the boxes in the image
-                # img = cv2.cvtColor(video._get_frame(frame_table[currentFrame][1]), cv2.COLOR_RGB2BGR)
-
-                # objects = doc.getElementsByTagName('object')
-                # ignored = doc.getElementsByTagName('ignored')
-                # for obj in objects + ignored:
-                #    box = obj.getElementsByTagName('box')[0]
-                #    name = 'car' if obj in objects else 'ignored'
-                #    xmin, ymin, xmax, ymax = map(lambda x: int(box.getElementsByTagName(x)[0].firstChild.nodeValue), ['xmin', 'ymin', 'xmax', 'ymax'])
-                #    cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 255, 0) if name == 'car' else (0, 0, 255))
-                # cv2.imshow('confirm annotation', img)
-                # confirm = cv2.waitKey(0) & 0xff
-                # if confirm == ord('y'):
-
-
                 # Write XML
                 with open('{:03d}'.format(int(video_descriptor.split('.')[0])) + '_' + '{:03d}'.format(currentFrame+1) + '.xml', 'w') as f:
                     doc.writexml(f, indent='', addindent='\t', newl='\n', encoding="utf-8")
                     print('XML file saved.')
                     continue
-                    # doc = generateNewDoc(videoDescriptor, frame_table[currentFrame][1],
-                    #                     frame_table[currentFrame][0], width, height, 3)
-                # else:
-                #     print('XML file not saved.')
-                # cv2.destroyWindow('confirm annotation')
+
             elif key == ord('b'):
                 if currentFrame > 0:
                     currentFrame -= 1
@@ -328,7 +311,6 @@ while cap.isOpened():
     # Break the loop
     else:
         break
-
 
 
 # When everything done, release the video capture obj
